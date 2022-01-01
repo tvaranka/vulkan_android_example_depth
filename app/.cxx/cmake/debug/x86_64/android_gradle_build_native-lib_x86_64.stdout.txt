@@ -1,0 +1,7 @@
+ninja: Entering directory `/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/debug/x86_64'
+[1/2] Building CXX object CMakeFiles/native-lib.dir/native-lib.cpp.o
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/src/main/cpp/native-lib.cpp:262:1: warning: control may reach end of non-void function [-Wreturn-type]
+}
+^
+1 warning generated.
+[2/2] Linking CXX shared library /home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so

@@ -1,0 +1,7 @@
+Executable : /home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/arm64-v8a
+native-lib
+jvmArgs : 
+

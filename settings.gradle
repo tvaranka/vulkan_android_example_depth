@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "vulkan_android_depth"

@@ -1,0 +1,3 @@
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86/CMakeFiles/rebuild_cache.dir
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86/CMakeFiles/edit_cache.dir
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86/CMakeFiles/native-lib.dir

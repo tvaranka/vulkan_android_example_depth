@@ -1,0 +1,9 @@
+# ninja log v5
+0	312	1640715560	CMakeFiles/native-lib.dir/native-lib.cpp.o	dae0705ee77a93a3
+312	373	1640715560	/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	11f09243f8d3d9ff
+0	355	1640715614	CMakeFiles/native-lib.dir/native-lib.cpp.o	dae0705ee77a93a3
+355	377	1640715614	/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	11f09243f8d3d9ff
+1	472	1640715641	CMakeFiles/native-lib.dir/native-lib.cpp.o	dae0705ee77a93a3
+472	497	1640715641	/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	11f09243f8d3d9ff
+0	870	1640757820	CMakeFiles/native-lib.dir/native-lib.cpp.o	dae0705ee77a93a3
+870	1003	1640757821	/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/debug/obj/x86_64/libnative-lib.so	11f09243f8d3d9ff

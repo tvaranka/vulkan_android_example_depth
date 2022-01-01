@@ -1,0 +1,21 @@
+                Executable : /home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/cmake
+arguments : 
+-H/home/tuomas/Project/vulkan/vulkan_android_depth/app/src/main/cpp
+-DCMAKE_FIND_ROOT_PATH=/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/prefab/x86_64/prefab
+-DCMAKE_BUILD_TYPE=Release
+-DCMAKE_TOOLCHAIN_FILE=/home/tuomas/Android/Sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake
+-DANDROID_ABI=x86_64
+-DANDROID_NDK=/home/tuomas/Android/Sdk/ndk/21.1.6352462
+-DANDROID_PLATFORM=android-28
+-DCMAKE_ANDROID_ARCH_ABI=x86_64
+-DCMAKE_ANDROID_NDK=/home/tuomas/Android/Sdk/ndk/21.1.6352462
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/release/obj/x86_64
+-DCMAKE_MAKE_PROGRAM=/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_SYSTEM_VERSION=28
+-B/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/x86_64
+-GNinja
+jvmArgs : 
+
+Build command args:

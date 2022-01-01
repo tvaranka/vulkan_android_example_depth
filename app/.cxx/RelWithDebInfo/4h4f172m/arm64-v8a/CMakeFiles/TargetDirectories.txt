@@ -1,0 +1,3 @@
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/RelWithDebInfo/4h4f172m/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/RelWithDebInfo/4h4f172m/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/RelWithDebInfo/4h4f172m/arm64-v8a/CMakeFiles/native-lib.dir

@@ -1,0 +1,40 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "/home/tuomas/Project/vulkan/vulkan_android_depth/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+      "-C",
+      "/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+    "-C",
+    "/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "native-lib-Debug-x86_64": {
+      "buildCommandComponents": [
+        "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/Debug/4t286l2a/x86_64",
+        "native-lib"
+      ],
+      "buildType": "debug",
+      "abi": "x86_64",
+      "artifactName": "native-lib",
+      "output": "/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cxx/Debug/4t286l2a/obj/x86_64/libnative-lib.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

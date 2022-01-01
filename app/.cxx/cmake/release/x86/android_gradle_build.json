@@ -1,0 +1,43 @@
+{
+  "stringTable": {
+    "0": "/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/x86",
+    "1": "--target=i686-none-linux-android28 --gcc-toolchain=/home/tuomas/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/tuomas/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_lib_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -DVK_USE_PLATFORM_ANDROID_KHR -O2 -DNDEBUG -fPIC"
+  },
+  "buildFiles": [
+    "/home/tuomas/Project/vulkan/vulkan_android_depth/app/src/main/cpp/CMakeLists.txt",
+    "/home/tuomas/Android/Sdk/ndk/21.1.6352462/build/cmake/android.toolchain.cmake",
+    "/home/tuomas/Android/Sdk/ndk/21.1.6352462/build/cmake/platforms.cmake"
+  ],
+  "cleanCommands": [
+    "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/x86\" clean"
+  ],
+  "buildTargetsCommand": "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja  -C \"/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "native-lib-Release-x86": {
+      "buildCommand": "/home/tuomas/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/tuomas/Project/vulkan/vulkan_android_depth/app/.cxx/cmake/release/x86\" native-lib",
+      "buildType": "release",
+      "toolchain": "462366046",
+      "abi": "x86",
+      "artifactName": "native-lib",
+      "files": [
+        {
+          "src": "/home/tuomas/Project/vulkan/vulkan_android_depth/app/src/main/cpp/native-lib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/home/tuomas/Project/vulkan/vulkan_android_depth/app/build/intermediates/cmake/release/obj/x86/libnative-lib.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "462366046": {
+      "cppCompilerExecutable": "/home/tuomas/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
