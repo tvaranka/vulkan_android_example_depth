@@ -37,7 +37,7 @@ find_library( # Sets the name of the path variable.
               # Specifies the name of the NDK library that
               # you want CMake to locate.
               log
-
+              android-lib
               android)
 
 # Specifies libraries CMake should link to your target library. You
@@ -50,6 +50,7 @@ target_link_libraries( # Specifies the target library.
                        vulkan
 
                        android
+                       ${android-lib}
 
                        -ljnigraphics
 
