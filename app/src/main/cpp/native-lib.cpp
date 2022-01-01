@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.h>
 #include <android/log.h>
 #include<android/bitmap.h>
+#include <android/asset_manager.h>
 
 #include <string>
 #include <iostream>
@@ -186,20 +187,18 @@ void createBindingsAndPipelineLayout(uint32_t bindingsCount){
         LOGE("failed to create pipeline layout");
     }
 }
-
 std::vector<char> readFile(const std::string &filename) {
-    std::ifstream file(filename, std::ios::ate | std::ios::binary);
+    AAssetManager* mgr;
+    AAsset* file = AAssetManager_open(mgr, "shaders/image_blur.comp.spv", AASSET_MODE_BUFFER);
+    if (!file) {
+        LOGE("failed to open file");
 
-    if (!file.is_open()) {
-        LOGE("failed to open file!");
     }
-
-    size_t fileSize = (size_t) file.tellg();
-    std::vector<char> buffer(fileSize);
-    file.seekg(0);
-    file.read(buffer.data(), fileSize);
-    file.close();
-
+    std::vector<char> buffer(AAsset_getLength(file));
+    if(AAsset_read(file, buffer.data(), buffer.size()) != buffer.size()) {
+        LOGE("failed to read file");
+    }
+    AAsset_close(file);
     return buffer;
 }
 
@@ -413,6 +412,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
 
     uint32_t bindingsCount = 2;
     createBindingsAndPipelineLayout(bindingsCount);
+
 
     createComputePipeline("./image_blur.comp.spv");
 

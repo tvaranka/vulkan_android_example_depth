@@ -40,6 +40,14 @@ import java.io.IOException;
         BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
 
+        String currentPath = "asd";
+        try {
+            currentPath = new java.io.File(".").getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i("asd", currentPath);
+
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
