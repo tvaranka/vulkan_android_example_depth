@@ -406,7 +406,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     for (int i = 0; i < img_size; i++) {
         data_gray[i] = data[4 * i];
     }
-    /*
+
     for (int x = 0; x < bmpInfo.width - 5; x++) {
         for (int y = 0; y < bmpInfo.height - 5; y++) {
             int sum = 0;
@@ -418,7 +418,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
             data_gray[y * bmpInfo.width + x] = sum / 25;
         }
     }
-     /*
+
     //copy data from gray back to RGBA
     for (int i = 0; i < img_size; i++) {
         data[4 * i] = data_gray[i];
