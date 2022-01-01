@@ -2,6 +2,7 @@
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +24,7 @@ import java.io.IOException;
     static {
         System.loadLibrary("native-lib");
     }
+     private AssetManager mgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +41,7 @@ import java.io.IOException;
 
         BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
-
-        String currentPath = "asd";
-        try {
-            currentPath = new java.io.File(".").getCanonicalPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i("asd", currentPath);
+        mgr = getResources().getAssets();
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +50,7 @@ import java.io.IOException;
                 int color = bitmap.getPixel(0, 0);
                 int B = (color ) & 0xff;
                 Log.d("asd before", "" + B);
-                blur(bitmap);
+                blur(mgr, bitmap);
                 Bitmap bitmap3 = bitmap.copy(bitmap.getConfig(), true);
                 img3.setImageBitmap(bitmap3);
                 color = bitmap.getPixel(0, 0);
@@ -73,5 +68,5 @@ import java.io.IOException;
      * which is packaged with this application.
      */
     public native String stringFromJNI();
-    public native void blur(Bitmap bitMapIn);
+    public native void blur(AssetManager assetManager, Bitmap bitMapIn);
 }

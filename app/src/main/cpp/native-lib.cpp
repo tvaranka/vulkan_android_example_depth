@@ -1,8 +1,9 @@
 #include <jni.h>
 #include <vulkan/vulkan.h>
 #include <android/log.h>
-#include<android/bitmap.h>
+#include <android/bitmap.h>
 #include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 
 #include <string>
 #include <iostream>
@@ -122,8 +123,7 @@ void pickPhysicalDevice() {
     VkPhysicalDeviceProperties gpuProperties;
     vkGetPhysicalDeviceProperties(physicalDevice, &gpuProperties);
 
-    LOGD("Using device: ");
-    //LOGD(gpuProperties.deviceName);
+    LOGD("Using device: %s", gpuProperties.deviceName);
 }
 
 void createLogicalDeviceAndQueue(){
@@ -187,8 +187,8 @@ void createBindingsAndPipelineLayout(uint32_t bindingsCount){
         LOGE("failed to create pipeline layout");
     }
 }
-std::vector<char> readFile(const std::string &filename) {
-    AAssetManager* mgr;
+std::vector<char> readFile(AAssetManager* mgr, const std::string &filename) {
+    //AAsset* file = AAssetManager_open(mgr, ("shaders/" + filename).c_str(), AASSET_MODE_BUFFER);
     AAsset* file = AAssetManager_open(mgr, "shaders/image_blur.comp.spv", AASSET_MODE_BUFFER);
     if (!file) {
         LOGE("failed to open file");
@@ -202,11 +202,12 @@ std::vector<char> readFile(const std::string &filename) {
     return buffer;
 }
 
-void createComputePipeline(const std::string& shaderName){
+void createComputePipeline(AAssetManager* mgr, const std::string& shaderName){
     VkShaderModuleCreateInfo shaderModuleCreateInfo{};
     shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 
-    auto shaderCode = readFile(shaderName);
+    auto shaderCode = readFile(mgr, shaderName);
+
     shaderModuleCreateInfo.pCode = reinterpret_cast<uint32_t*>(shaderCode.data());
     shaderModuleCreateInfo.codeSize = shaderCode.size();
 
@@ -387,6 +388,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_example_vulkan_1android_1depth_MainActivity_blur(
         JNIEnv* env,
         jobject,
+        jobject assetManager,
         jobject bitMapIn) {
     AndroidBitmapInfo bmpInfo={0};
     if (AndroidBitmap_getInfo(env, bitMapIn, &bmpInfo) < 0) {
@@ -399,10 +401,12 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     //Pixels in RGBA
     //make grayscale
     LOGD("Height, width: %d, %d, %d", bmpInfo.height, bmpInfo.width, bmpInfo.format);
-    size_t img_size = bmpInfo.height * bmpInfo.width;
-    char data_gray [img_size];
+    uint32_t w = bmpInfo.width;
+    uint32_t h = bmpInfo.height;
+    const uint32_t elements = w * h;
+    char data_gray [elements];
     //copy data to grey image
-    for (int i = 0; i < img_size; i++) {
+    for (int i = 0; i < elements; i++) {
         data_gray[i] = data[4 * i];
     }
     //vulkan setup
@@ -413,12 +417,10 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     uint32_t bindingsCount = 2;
     createBindingsAndPipelineLayout(bindingsCount);
 
+    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+    createComputePipeline(mgr, "image_blur.comp.spv");
 
-    createComputePipeline("./image_blur.comp.spv");
 
-    uint32_t w = bmpInfo.width;
-    uint32_t h = bmpInfo.height;
-    const uint32_t elements = w * h;
     std::vector<VkBuffer> buffers;
     std::vector<uint32_t> offsets;
 
@@ -443,17 +445,19 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     vkCmdDispatch(commandBuffer, (w+31)/32, (h+31)/32, 1);
     vkEndCommandBuffer(commandBuffer);
     char *d_data = nullptr;
-    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void**>(&data)) != VK_SUCCESS){
+    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void**>(&d_data)) != VK_SUCCESS){
         LOGE("failed to map device memory");
     }
     auto d_a = reinterpret_cast<float*>(d_data + offsets[0]);
     auto d_b = reinterpret_cast<float*>(d_data + offsets[1]);
 
-    for(uint32_t i = 0; i < img_size; i++){
-        d_a[i] = data[i];
+    for(uint32_t i = 0; i < elements; i++){
+        d_a[i] = data_gray[i];
         d_b[i] = 0;
     }
+
     vkUnmapMemory(device, memory);
+
     //start time
     VkSubmitInfo submitInfo = {};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -463,18 +467,17 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     vkQueueWaitIdle(queue);
     //end time
 
-    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void **>(&data)) != VK_SUCCESS){
+    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void **>(&d_data)) != VK_SUCCESS){
         LOGE("failed to map device memory");
     }
-    d_a = reinterpret_cast<float*>(data + offsets[0]);
+    d_a = reinterpret_cast<float*>(d_data + offsets[0]);
 
-    d_b = reinterpret_cast<float*>(data + offsets[1]);
+    d_b = reinterpret_cast<float*>(d_data + offsets[1]);
 
     vkUnmapMemory(device, memory);
 
-
     //copy data from gray back to RGBA
-    for (int i = 0; i < img_size; i++) {
+    for (int i = 0; i < elements; i++) {
         data[4 * i] = d_b[i];
         data[4 * i + 1] = d_b[i];
         data[4 * i + 2] = d_b[i];
