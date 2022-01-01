@@ -406,34 +406,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     for (int i = 0; i < img_size; i++) {
         data_gray[i] = data[4 * i];
     }
-
-    for (int x = 0; x < bmpInfo.width - 5; x++) {
-        for (int y = 0; y < bmpInfo.height - 5; y++) {
-            int sum = 0;
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-                    sum += data_gray[(y + j) * bmpInfo.width + x + i];
-                }
-            }
-            data_gray[y * bmpInfo.width + x] = sum / 25;
-        }
-    }
-
-    //copy data from gray back to RGBA
-    for (int i = 0; i < img_size; i++) {
-        data[4 * i] = data_gray[i];
-        data[4 * i + 1] = data_gray[i];
-        data[4 * i + 2] = data_gray[i];
-    }
-    AndroidBitmap_unlockPixels(env, bitMapIn);
-}
-
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_example_vulkan_1android_1depth_MainActivity_stringFromJNI(
-        JNIEnv* env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    //
+    //vulkan setup
     createInstance();
     pickPhysicalDevice();
     createLogicalDeviceAndQueue();
@@ -441,14 +414,10 @@ Java_com_example_vulkan_1android_1depth_MainActivity_stringFromJNI(
     uint32_t bindingsCount = 2;
     createBindingsAndPipelineLayout(bindingsCount);
 
-    //createComputePipeline("./image_blur.comp.spv");
+    createComputePipeline("./image_blur.comp.spv");
 
-    //cv::Mat img = cv::imread("../im0small.png", cv::IMREAD_GRAYSCALE);
-    //img.convertTo(img, CV_32FC1);
-    /*
-    uint32_t w = 500;
-    uint32_t h = 500;
-
+    uint32_t w = bmpInfo.width;
+    uint32_t h = bmpInfo.height;
     const uint32_t elements = w * h;
     std::vector<VkBuffer> buffers;
     std::vector<uint32_t> offsets;
@@ -472,10 +441,63 @@ Java_com_example_vulkan_1android_1depth_MainActivity_stringFromJNI(
 
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
     vkCmdDispatch(commandBuffer, (w+31)/32, (h+31)/32, 1);
-     */
+    vkEndCommandBuffer(commandBuffer);
+    char *d_data = nullptr;
+    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void**>(&data)) != VK_SUCCESS){
+        LOGE("failed to map device memory");
+    }
+    auto d_a = reinterpret_cast<float*>(d_data + offsets[0]);
+    auto d_b = reinterpret_cast<float*>(d_data + offsets[1]);
+
+    for(uint32_t i = 0; i < img_size; i++){
+        d_a[i] = data[i];
+        d_b[i] = 0;
+    }
+    vkUnmapMemory(device, memory);
+    //start time
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+    vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkQueueWaitIdle(queue);
+    //end time
+
+    if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void **>(&data)) != VK_SUCCESS){
+        LOGE("failed to map device memory");
+    }
+    d_a = reinterpret_cast<float*>(data + offsets[0]);
+
+    d_b = reinterpret_cast<float*>(data + offsets[1]);
+
+    vkUnmapMemory(device, memory);
+
+
+    //copy data from gray back to RGBA
+    for (int i = 0; i < img_size; i++) {
+        data[4 * i] = d_b[i];
+        data[4 * i + 1] = d_b[i];
+        data[4 * i + 2] = d_b[i];
+    }
+    AndroidBitmap_unlockPixels(env, bitMapIn);
+    //release vulkan
+    vkDestroyCommandPool(device, commandPool, nullptr);
+    vkFreeMemory(device, memory, nullptr);
+    for(VkBuffer& buff : buffers){
+        vkDestroyBuffer(device, buff, nullptr);
+    }
+    vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+    vkDestroyPipeline(device, pipeline, nullptr);
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+    vkDestroyDescriptorSetLayout(device, setLayout, nullptr);
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);
-    //
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_example_vulkan_1android_1depth_MainActivity_stringFromJNI(
+        JNIEnv* env,
+        jobject /* this */) {
+    std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
