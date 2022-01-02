@@ -11,6 +11,6 @@ The current implementation was slightly optimized with caching some values from 
 
 
 <p float="left">
-  <img src="screenshots/Screenshot_20220102-105633.jpg", width=475>
-  <img src="screenshots/Screenshot_20220102-105641.jpg", width=475>
+  <img src="screenshots/Screenshot_20220102-105633.jpg", width=450>
+  <img src="screenshots/Screenshot_20220102-105641.jpg", width=450>
  </p>
