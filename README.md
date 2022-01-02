@@ -7,7 +7,7 @@ The depth image is calculated using a disparity map using epipolar geometry with
 ![image text](screenshots/zncc_equation.png)
 Two images are given as an input that are taken from slightly different positions. The difference between images can be used to approximate depth as objects further away will have less movement and objects closer.
 
-The current implementation was slightly optimized with caching some values from around 150ms down to around 110ms. Much more optimization can be done, especially by using hierarchical memory (note: only support by Adreno GPUs).
+The current implementation was slightly optimized with caching some values from around 150ms down to around 110ms. Much more optimization can be done, especially by using hierarchical memory (only supported by Adreno GPUs).
 
 
 <p float="left">
