@@ -392,7 +392,7 @@ long long currentTimeInMilliseconds()
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-extern "C" JNIEXPORT void JNICALL
+extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_vulkan_1android_1depth_MainActivity_depth(
         JNIEnv* env,
         jobject,
@@ -514,6 +514,9 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
     vkDestroyDescriptorSetLayout(device, setLayout, nullptr);
     vkDestroyDevice(device, nullptr);
     vkDestroyInstance(instance, nullptr);
+
+    std::string gpu_time = std::to_string(end_time - start_time);
+    return env->NewStringUTF(gpu_time.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL

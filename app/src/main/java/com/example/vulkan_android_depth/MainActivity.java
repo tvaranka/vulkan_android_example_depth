@@ -48,9 +48,10 @@ import java.io.IOException;
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                depth(mgr, img0, img1);
+                String gpu_time = depth(mgr, img0, img1);
                 Bitmap bitmap3 = img0.copy(img0.getConfig(), true);
                 iv3.setImageBitmap(bitmap3);
+                tv.setText("Took a total of : "+ gpu_time + "ms");
             }
         });
     }
@@ -61,5 +62,5 @@ import java.io.IOException;
      * which is packaged with this application.
      */
     public native String stringFromJNI();
-    public native void depth(AssetManager assetManager, Bitmap img0, Bitmap img1);
+    public native String depth(AssetManager assetManager, Bitmap img0, Bitmap img1);
 }
