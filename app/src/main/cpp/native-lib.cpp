@@ -385,17 +385,21 @@ void createCommandPoolAndBuffer(){
     }
 }
 extern "C" JNIEXPORT void JNICALL
-Java_com_example_vulkan_1android_1depth_MainActivity_blur(
+Java_com_example_vulkan_1android_1depth_MainActivity_depth(
         JNIEnv* env,
         jobject,
         jobject assetManager,
-        jobject bitMapIn) {
+        jobject img0,
+        jobject img1) {
     AndroidBitmapInfo bmpInfo={0};
-    if (AndroidBitmap_getInfo(env, bitMapIn, &bmpInfo) < 0) {
+    if (AndroidBitmap_getInfo(env, img0, &bmpInfo) < 0) {
         LOGE("failed to load bitmap info");
     }
-    char* data;
-    if (AndroidBitmap_lockPixels(env, bitMapIn, (void**)&data)) {
+    char *data0, *data1;
+    if (AndroidBitmap_lockPixels(env, img0, (void**)&data0)) {
+        LOGE("failed to load bitmap pixels");
+    }
+    if (AndroidBitmap_lockPixels(env, img1, (void**)&data1)) {
         LOGE("failed to load bitmap pixels");
     }
     //Pixels in RGBA
@@ -404,10 +408,11 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     uint32_t w = bmpInfo.width;
     uint32_t h = bmpInfo.height;
     const uint32_t elements = w * h;
-    char data_gray [elements];
+    char data_gray0 [elements];
+    char data_gray1 [elements];
     //copy data to grey image
     for (int i = 0; i < elements; i++) {
-        data_gray[i] = data[4 * i];
+        data_gray0[i] = data1[4 * i];
     }
     //vulkan setup
     createInstance();
@@ -452,7 +457,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
     auto d_b = reinterpret_cast<float*>(d_data + offsets[1]);
 
     for(uint32_t i = 0; i < elements; i++){
-        d_a[i] = data_gray[i];
+        d_a[i] = data_gray0[i];
         d_b[i] = 0;
     }
 
@@ -478,11 +483,11 @@ Java_com_example_vulkan_1android_1depth_MainActivity_blur(
 
     //copy data from gray back to RGBA
     for (int i = 0; i < elements; i++) {
-        data[4 * i] = d_b[i];
-        data[4 * i + 1] = d_b[i];
-        data[4 * i + 2] = d_b[i];
+        data0[4 * i] = d_b[i];
+        data0[4 * i + 1] = d_b[i];
+        data0[4 * i + 2] = d_b[i];
     }
-    AndroidBitmap_unlockPixels(env, bitMapIn);
+    AndroidBitmap_unlockPixels(env, img0);
     //release vulkan
     vkDestroyCommandPool(device, commandPool, nullptr);
     vkFreeMemory(device, memory, nullptr);
