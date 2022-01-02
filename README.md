@@ -10,6 +10,7 @@ Two images are given as an input that are taken from slightly different position
 The current implementation was slightly optimized with caching some values from around 150ms down to around 110ms. Much more optimization can be done, especially by using hierarchical memory (note: only support by Adreno GPUs).
 
 
-
-![image text](screenshots/Screenshot_20220102-105633.jpg)
-![image text](screenshots/Screenshot_20220102-105641.jpg)
+<p float="left">
+  <img src="screenshots/Screenshot_20220102-105633.jpg", width=475>
+  <img src="screenshots/Screenshot_20220102-105641.jpg", width=475>
+ </p>
