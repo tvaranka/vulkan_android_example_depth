@@ -1,5 +1,5 @@
 # Vulkan Android depth from stereo image
-An example of using Vulkan for image processing on Android. An example for blur (check blur branch) and and depth calculation using Vulkan compute shaders.
+An example of using Vulkan for image processing on Android. An example for blur (check blur branch) and depth calculation using Vulkan compute shaders.
 
 Tags: Vulkan, Android, Image processing, GPGPU, Mobile
 
