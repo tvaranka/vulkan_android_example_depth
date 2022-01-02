@@ -35,29 +35,22 @@ import java.io.IOException;
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
 
-        ImageView img = findViewById(R.id.imageView);
-        ImageView img2 = findViewById(R.id.imageView2);
-        ImageView img3 = findViewById(R.id.imageView3);
+        ImageView iv = findViewById(R.id.imageView);
+        ImageView iv2 = findViewById(R.id.imageView2);
+        ImageView iv3 = findViewById(R.id.imageView3);
 
-        BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
+        BitmapDrawable drawable0 = (BitmapDrawable) iv.getDrawable();
+        Bitmap img0 = drawable0.getBitmap();
+        BitmapDrawable drawable1 = (BitmapDrawable) iv2.getDrawable();
+        Bitmap img1 = drawable1.getBitmap();
         mgr = getResources().getAssets();
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Do something in response to button click
-                int color = bitmap.getPixel(0, 0);
-                int B = (color ) & 0xff;
-                Log.d("asd before", "" + B);
-                blur(mgr, bitmap);
-                Bitmap bitmap3 = bitmap.copy(bitmap.getConfig(), true);
-                img3.setImageBitmap(bitmap3);
-                color = bitmap.getPixel(0, 0);
-                B = (color ) & 0xff;
-                Log.d("asd", "" + B);
-
-                //blur(bitmap);
+                depth(mgr, img0, img1);
+                Bitmap bitmap3 = img0.copy(img0.getConfig(), true);
+                iv3.setImageBitmap(bitmap3);
             }
         });
     }
@@ -68,5 +61,5 @@ import java.io.IOException;
      * which is packaged with this application.
      */
     public native String stringFromJNI();
-    public native void blur(AssetManager assetManager, Bitmap bitMapIn);
+    public native void depth(AssetManager assetManager, Bitmap img0, Bitmap img1);
 }
