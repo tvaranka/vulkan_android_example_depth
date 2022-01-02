@@ -4,6 +4,7 @@
 #include <android/bitmap.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
+#include <sys/time.h>
 
 #include <string>
 #include <iostream>
@@ -383,6 +384,14 @@ void createCommandPoolAndBuffer(){
         LOGE("failed to allocate command buffer");
     }
 }
+
+long long currentTimeInMilliseconds()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_example_vulkan_1android_1depth_MainActivity_depth(
         JNIEnv* env,
@@ -465,6 +474,7 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
 
     vkUnmapMemory(device, memory);
 
+    long start_time = currentTimeInMilliseconds();
     //start time
     VkSubmitInfo submitInfo = {};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -473,6 +483,8 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
     vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
     vkQueueWaitIdle(queue);
     //end time
+    long end_time = currentTimeInMilliseconds();
+    LOGD("Time: %ld ms", end_time - start_time);
 
     if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void **>(&d_data)) != VK_SUCCESS){
         LOGE("failed to map device memory");
