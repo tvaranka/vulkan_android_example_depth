@@ -188,8 +188,7 @@ void createBindingsAndPipelineLayout(uint32_t bindingsCount){
     }
 }
 std::vector<char> readFile(AAssetManager* mgr, const std::string &filename) {
-    //AAsset* file = AAssetManager_open(mgr, ("shaders/" + filename).c_str(), AASSET_MODE_BUFFER);
-    AAsset* file = AAssetManager_open(mgr, "shaders/image_blur.comp.spv", AASSET_MODE_BUFFER);
+    AAsset* file = AAssetManager_open(mgr, ("shaders/" + filename).c_str(), AASSET_MODE_BUFFER);
     if (!file) {
         LOGE("failed to open file");
 
@@ -412,24 +411,25 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
     char data_gray1 [elements];
     //copy data to grey image
     for (int i = 0; i < elements; i++) {
-        data_gray0[i] = data1[4 * i];
+        data_gray0[i] = data0[4 * i];
+        data_gray1[i] = data1[4 * i];
     }
     //vulkan setup
     createInstance();
     pickPhysicalDevice();
     createLogicalDeviceAndQueue();
 
-    uint32_t bindingsCount = 2;
+    uint32_t bindingsCount = 3;
     createBindingsAndPipelineLayout(bindingsCount);
 
     AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
-    createComputePipeline(mgr, "image_blur.comp.spv");
+    createComputePipeline(mgr, "disparity_map.comp.spv");
 
 
     std::vector<VkBuffer> buffers;
     std::vector<uint32_t> offsets;
 
-    createBuffers(buffers, 2, elements);
+    createBuffers(buffers, 3, elements);
     allocateBufferMemoryAndBind(buffers, offsets);
     allocateDescriptorSets(buffers);
 
@@ -453,12 +453,14 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
     if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void**>(&d_data)) != VK_SUCCESS){
         LOGE("failed to map device memory");
     }
-    auto d_a = reinterpret_cast<float*>(d_data + offsets[0]);
-    auto d_b = reinterpret_cast<float*>(d_data + offsets[1]);
+    auto d_img0 = reinterpret_cast<float*>(d_data + offsets[0]);
+    auto d_img1 = reinterpret_cast<float*>(d_data + offsets[1]);
+    auto d_disp_img = reinterpret_cast<float*>(d_data + offsets[2]);
 
     for(uint32_t i = 0; i < elements; i++){
-        d_a[i] = data_gray0[i];
-        d_b[i] = 0;
+        d_img0[i] = data_gray0[i];
+        d_img1[i] = data_gray1[i];
+        d_disp_img[i] = 0;
     }
 
     vkUnmapMemory(device, memory);
@@ -475,17 +477,17 @@ Java_com_example_vulkan_1android_1depth_MainActivity_depth(
     if(vkMapMemory(device, memory, 0, VK_WHOLE_SIZE, 0, reinterpret_cast<void **>(&d_data)) != VK_SUCCESS){
         LOGE("failed to map device memory");
     }
-    d_a = reinterpret_cast<float*>(d_data + offsets[0]);
-
-    d_b = reinterpret_cast<float*>(d_data + offsets[1]);
+    d_img0 = reinterpret_cast<float*>(d_data + offsets[0]);
+    d_img1 = reinterpret_cast<float*>(d_data + offsets[1]);
+    d_disp_img = reinterpret_cast<float*>(d_data + offsets[2]);
 
     vkUnmapMemory(device, memory);
 
     //copy data from gray back to RGBA
     for (int i = 0; i < elements; i++) {
-        data0[4 * i] = d_b[i];
-        data0[4 * i + 1] = d_b[i];
-        data0[4 * i + 2] = d_b[i];
+        data0[4 * i] = d_disp_img[i];
+        data0[4 * i + 1] = d_disp_img[i];
+        data0[4 * i + 2] = d_disp_img[i];
     }
     AndroidBitmap_unlockPixels(env, img0);
     //release vulkan
